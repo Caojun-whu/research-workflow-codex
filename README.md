@@ -94,7 +94,7 @@ bash .agents/skills/research-workflow/scripts/init-project.sh .
 - 复现前在 `reproduction/<方法名>/reproduction-plan.md` 固定复现目标、论文与代码证据、数据、指标、成功标准及资源，经用户确认再执行；模板位于 `assets/templates/reproduction-plan.md`，初始化项目时不预建未知方法的目录。
 - 不使用 `related_work/index.md` 或根目录论文链接；Codex 按需直接查看复制进来的论文目录。
 - 每版实验除汇总表外增加 `experiment/<版本名>/run.md`，记录真实的 Git commit、数据/环境版本、随机种子、命令和产物，缺失项如实标记。
-- `scripts/fetch-paper.sh` 作为上游功能的**可选备用脚本**保留，仅在用户明确要求服务器抓取某篇 arXiv 论文时才可使用。正常流程**不自动下载论文**。
+- `scripts/fetch-paper.sh` 作为上游功能的**可选备用脚本**保留，仅在用户明确要求服务器抓取某篇 arXiv 论文时才可使用；处理来自外部的归档文件前应进行额外安全检查。正常流程**不自动下载论文**。
 
 开始某个方法的复现时，由 Codex 在 `reproduction/<方法名>/` 复制复现计划模板，检查证据、填写待确认事项并呈交用户；**项目初始化不会凭空为未知方法创建目录，也不会自动启动训练**。例如：
 
@@ -116,7 +116,7 @@ bash tests/test_init.sh
 bash tests/test_fetch_offline.sh
 ```
 
-测试覆盖目录初始化、非覆盖/幂等性、复现计划模板就绪、已拷贝论文材料保持原样和备用抓取脚本的离线安全测试。**尚未在用户的服务器环境或真实 Codex 会话中完成端到端测试。**
+仓库附有初始化流程测试，以及备用抓取脚本的 Shell 语法检查。完整下载和安全解包功能尚需在实际服务器环境进一步测试。**尚未在用户的服务器环境或真实 Codex 会话中完成端到端测试。**
 
 ## 版权与致谢
 
