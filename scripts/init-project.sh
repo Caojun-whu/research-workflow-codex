@@ -46,22 +46,18 @@ EOF
   echo "  +  .gitignore"
 fi
 
-cat <<EOF
+cat <<'EOF'
 
-骨架建好了：$(pwd)
+科研项目骨架已建立（已存在的文件不会覆盖）。
 
-下一步按顺序：
-
-  1. 填 AGENTS.md 的 {{占位符}} —— 尤其是「核心主张」那一条，
-     那是整个项目的锚，Agent 靠它判断什么该做什么不该做
-
-  2. 抓文献：
-       bash $(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/fetch-paper.sh <arxiv-id> <目录名>
-
-  3. **先 reproduction 再找问题** —— 挑两三篇有开源代码的跑通，写 reproduction/<方法>/reproduction报告.md
-     论文只报平均和成功配置，卡在哪、哪个 setting 崩了，只有自己跑才看得见
-
-  4. reproduction跑完之后再进 brainstorm.md 提假设
-
-每个窗口结束前更新 handoff.md。
+下一步：
+1. 填写 AGENTS.md 的项目名、目标及领域术语。
+2. 用户在 Mac 上使用独立 paper-reading Skill，手动复制完整论文文件夹到 related_work/<论文名称>/。
+3. 复现前先创建 reproduction/<方法名>/reproduction-plan.md：
+   mkdir -p reproduction/<方法名>
+   cp <skill>/assets/templates/reproduction-plan.md reproduction/<方法名>/reproduction-plan.md
+   （仅在目标计划不存在时复制；应由 Codex 填写并请求用户确认）
+4. 经用户确认后执行 Baseline 复现，成果保存在 reproduction/<方法名>/。
+5. 随后记录 brainstorm.md、experiment/results.md 和 experiment/<版本名>/run.md。
+6. 结束前更新 handoff.md。
 EOF
