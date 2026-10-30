@@ -1,125 +1,50 @@
 # research-workflow-codex
 
-**版本：v0.3（复现前计划）**
+**v0.4 · 按需科研协作**
 
-基于 [skJack/research-workflow](https://github.com/skJack/research-workflow) 的 **Codex 服务器科研工作流**，保留原版「文献 → Baseline 复现 → 假设 → 实验」和项目文件管理方式，只进行少量适配。
+用于服务器 Codex 的轻量 Skill：利用已有论文资料推进 Baseline 复现、研究假设和实验，并保存可继续的进度与结果。
 
-## 实际使用方式（两台设备、两个独立 Skill）
+## 使用方式
 
-- **Mac 本地**：用已经安装的 [`Caojun-whu/paper-reading-skill`](https://github.com/Caojun-whu/paper-reading-skill) 阅读论文、查看 PDF/LaTeX/图表/官方代码、形成 `精读笔记.md`。论文文件夹继续遵守该 Skill 在 Mac 上的原有规则，无需修改。
-- **手动转移**：将 Mac 上生成的 **整个论文文件夹**（含笔记、PDF、源码、图片和 `code/`，如有）复制到服务器科研项目的 `related_work/` 目录中。例如把 Mac 的 `Geo2Vec/` 复制为服务器的 `related_work/Geo2Vec/`。不需要自动同步、索引、调用另一个 Skill 或重新下载。
-- **服务器 Codex**：只安装本 `research-workflow` Skill。直接读取 `related_work/<论文名称>/` 中现成的材料，先制定 `reproduction-plan.md` 并确认、再复现 Baseline（成果放在 **`reproduction/`**），之后讨论研究假设、实施自己的实验，记录指标并维护 `handoff.md`。
+在 Mac 上使用独立的 [paper-reading](https://github.com/Caojun-whu/paper-reading-skill)，将完整论文目录手动复制到服务器项目的 `related_work/<论文名>/`。服务器上的本 Skill 直接使用这些资料。
 
-这两套 Skill **相互独立**。本仓库不包含、不安装、也不调用 `paper-reading`。
+目录和项目记录由 Agent 根据当前任务建立；技能包不再包含初始化或论文下载脚本。实际研究所需的训练、数据处理和评估程序保存在各自科研项目中。
 
-## 安装（服务器）
+## 安装
 
-下载 ZIP，解压后将 `research-workflow-codex` 文件夹放到服务器 Codex 项目的 `.agents/skills/`，并命名为 `research-workflow`：
+将本仓库放到服务器项目的 `.agents/skills/research-workflow/`，确保其中有 `SKILL.md` 和 `references/records.md`。无需执行初始化命令，也无需预先创建一套项目文档。
 
-```bash
-# 在服务器科研项目根目录执行
-mkdir -p .agents/skills
-cp -R /path/to/research-workflow-codex .agents/skills/research-workflow
-bash .agents/skills/research-workflow/scripts/init-project.sh .
-```
-
-如果项目已经有 `AGENTS.md`，初始化脚本不会覆盖。必要时人工参考 `assets/templates/AGENTS-snippet.md` 合并研究规则。之后重新开启 Codex 会话，以便发现 Skill。
-
-### 使用示例
-
-在 Mac 上使用独立的阅读 Skill 形成 `Geo2Vec/`，**自行将其复制到服务器**的 `<项目>/related_work/Geo2Vec/`。在服务器项目根目录开启 Codex：
+使用示例：
 
 ```text
-使用 $research-workflow。先读 AGENTS.md 和 handoff.md，
-检查 related_work/Geo2Vec/ 里已经拷贝好的论文材料，
-创建 reproduction/Geo2Vec/reproduction-plan.md（使用 Skill 模板），
-核对论文目标指标、代码与数据版本、成功标准、资源和阻塞项；
-向我展示计划，未经确认不要安装依赖或执行训练。
+使用 $research-workflow。基于 related_work/Geo2Vec/ 制定复现计划，先不要运行。
 ```
 
 ```text
-使用 $research-workflow。针对 reproduction/Geo2Vec/ 的复现结果，
-梳理关键误差和可能的研究假设，更新 brainstorm.md；
-按 experiment/evaluation.md 制定实验方案。
+使用 $research-workflow。按已确认的计划和资源范围执行复现，记录实际结果。
 ```
 
 ```text
-使用 $research-workflow。记录 v4_<方法名> 实验，
-填写 experiment/v4_<方法名>/run.md，追加 experiment/results.md，
-然后更新 handoff.md。
+使用 $research-workflow。读取当前项目的交接记录，继续下一步工作。
 ```
 
-## 服务器项目结构
+## 文件
 
-```text
-<研究项目>/
-├── AGENTS.md                  # Codex 项目规则
-├── handoff.md                 # 跨会话进度交接
-├── brainstorm.md              # 研究假设、讨论、否定过程
-├── dataset.md                 # 数据处理与划分说明
-├── related_work/              # 手动从 Mac 复制的完整论文文件夹
-│   ├── Geo2Vec/
-│   │   ├── paper.pdf
-│   │   ├── source/             # 如 arXiv 提供
-│   │   ├── paper.tex          # 如有
-│   │   ├── paper.txt          # 如有
-│   │   ├── outline.md         # 如有
-│   │   ├── figures/           # 如有
-│   │   ├── code/              # 已核实的官方代码（如有）；默认只读
-│   │   ├── meta.json          # 如有
-│   │   └── 精读笔记.md
-│   └── 其他论文/
-├── reproduction/              # Baseline 复现代码、配置、报告
-│   └── Geo2Vec/
-│       ├── reproduction-plan.md # 执行前的复现计划（从模板复制）
-│       └── report.md            # 运行之后的复现报告
-├── experiment/
-│   ├── evaluation.md          # 统一评估协议
-│   ├── results.md             # 实验版本汇总
-│   └── <版本名>/
-│       ├── run.md             # 运行环境、seed、commit、数据版本
-│       └── metrics.json       # 真正完成实验后才生成
-├── DataSet/
-└── .agents/skills/research-workflow/
-```
+| 文件 | 用途 |
+|---|---|
+| [SKILL.md](SKILL.md) | 工作约定、执行边界和交接要求 |
+| [references/records.md](references/records.md) | 按需参考的计划、运行、评估和交接记录示例 |
+| [LICENSE](LICENSE) | Apache License 2.0 |
 
-如果从旧版本升级，项目里已经存在 `复现/`，请**自行确认后**将旧内容迁移到 `reproduction/`；初始化脚本不会删除或移动已有复现成果。
+## 从旧版升级
 
-**约定**：不重命名、移动或覆盖 `related_work/<论文>/` 内从 Mac 复制的文件。阅读和复现都可参考这些材料，但自己的复现代码、运行结果应放在 `reproduction/`，不要回写到 `related_work/`。即便一个论文本身没有 `source/`、`code/` 等也可继续研究，缺失项明确说明。
+v0.4 删除技能包中的两个 `.sh` 脚本、固定模板及对应脚本测试；历史变更说明合并到本页。更新时按上表核对技能目录，移除旧版的 `scripts/`、`assets/templates/`、`tests/` 和 `CHANGES.md`；若曾自行修改这些技能文件，先比对并保留所需内容。
 
-## 保留与优化
+这些变更仅针对技能包。已有科研项目中的 `AGENTS.md`、笔记、复现计划、实验程序和运行记录继续复用，按需增量维护，不因升级删除或重建。已有 `AGENTS.md` 若引用旧技能脚本或模板，仅调整相关条目，保留项目特有约定。
 
-- 保留原版一个 `research-workflow` Skill + `AGENTS.md`、`handoff.md`、`brainstorm.md`、实验和数据模板。
-- 文件夹 `复现/` 在服务器端统一改名为 **`reproduction/`**。
-- 复现前在 `reproduction/<方法名>/reproduction-plan.md` 固定复现目标、论文与代码证据、数据、指标、成功标准及资源，经用户确认再执行；模板位于 `assets/templates/reproduction-plan.md`，初始化项目时不预建未知方法的目录。
-- 不使用 `related_work/index.md` 或根目录论文链接；Codex 按需直接查看复制进来的论文目录。
-- 每版实验除汇总表外增加 `experiment/<版本名>/run.md`，记录真实的 Git commit、数据/环境版本、随机种子、命令和产物，缺失项如实标记。
-- `scripts/fetch-paper.sh` 作为上游功能的**可选备用脚本**保留，仅在用户明确要求服务器抓取某篇 arXiv 论文时才可使用；处理来自外部的归档文件前应进行额外安全检查。正常流程**不自动下载论文**。
+## 来源与版本
 
-开始某个方法的复现时，由 Codex 在 `reproduction/<方法名>/` 复制复现计划模板，检查证据、填写待确认事项并呈交用户；**项目初始化不会凭空为未知方法创建目录，也不会自动启动训练**。例如：
+改编自 [skJack/research-workflow](https://github.com/skJack/research-workflow)，保留上游 Apache License 2.0。本项目为独立适配版本。
 
-```bash
-mkdir -p reproduction/Geo2Vec
-[ -e reproduction/Geo2Vec/reproduction-plan.md ] || \
-  cp .agents/skills/research-workflow/assets/templates/reproduction-plan.md \
-    reproduction/Geo2Vec/reproduction-plan.md
-```
-
-以上 `cp` 仅适用于目标文件尚不存在的情况。已存在的计划必须增量修订，不能覆盖。
-
-## 测试
-
-在 Skill 根目录执行：
-
-```bash
-bash tests/test_init.sh
-bash tests/test_fetch_offline.sh
-```
-
-仓库附有初始化流程测试，以及备用抓取脚本的 Shell 语法检查。完整下载和安全解包功能尚需在实际服务器环境进一步测试。**尚未在用户的服务器环境或真实 Codex 会话中完成端到端测试。**
-
-## 版权与致谢
-
-- 上游：[skJack/research-workflow](https://github.com/skJack/research-workflow)（Apache License 2.0，依据其许可改编）
-- 独立的 Mac 阅读 Skill：[Caojun-whu/paper-reading-skill](https://github.com/Caojun-whu/paper-reading-skill)（MIT；本项目不集成其代码）
-- 详细修改记录见 `CHANGES.md`。本项目不是上游官方版本。
+- **v0.3**：明确 Mac/服务器分工，并增加复现前计划与实验运行记录。
+- **v0.4**：移除内置脚本与成套模板，改为按需建立文件；统一执行范围，保留复现成功标准、真实结果记录和跨会话交接。
