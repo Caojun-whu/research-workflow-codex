@@ -1,18 +1,18 @@
 # research-workflow-codex
 
-**v0.4 · 按需科研协作**
+**v0.4 · 轻量科研协作**
 
 用于服务器 Codex 的轻量 Skill：利用已有论文资料推进 Baseline 复现、研究假设和实验，并保存可继续的进度与结果。
 
 ## 使用方式
 
-在 Mac 上使用独立的 [paper-reading](https://github.com/Caojun-whu/paper-reading-skill)，将完整论文目录手动复制到服务器项目的 `related_work/<论文名>/`。服务器上的本 Skill 直接使用这些资料。
+将已有论文资料放入项目的 `related_work/<论文名>/`，本 Skill 直接使用这些资料。
 
-目录和项目记录由 Agent 根据当前任务建立；技能包不再包含初始化或论文下载脚本。实际研究所需的训练、数据处理和评估程序保存在各自科研项目中。
+首次进入未初始化的科研项目时，Agent 建立基本目录结构、`AGENTS.md` 和 `handoff.md`；后续研究文件仍按需创建，不重复初始化。技能包不包含初始化或论文下载脚本。实际研究所需的训练、数据处理和评估程序保存在各自科研项目中。
 
 ## 安装
 
-将本仓库放到服务器项目的 `.agents/skills/research-workflow/`，确保其中有 `SKILL.md` 和 `references/records.md`。无需执行初始化命令，也无需预先创建一套项目文档。
+将本仓库放到服务器项目的 `.agents/skills/research-workflow/`，确保其中有 `SKILL.md` 和 `references/records.md`。无需手动执行初始化命令；首次使用时由 Agent 完成基础初始化，任务文档仍按需创建。
 
 使用示例：
 
